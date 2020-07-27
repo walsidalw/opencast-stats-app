@@ -22,7 +22,7 @@ class OcClient:
             offset += 100
             x = r.json()
             for elem in x:
-                result[elem['identifier']] = elem['title']
+                result[elem['identifier']] = {"title": elem['title'], "created": elem['created']}
         return result
 
     def get_all_episodes(self, series_id):
@@ -34,8 +34,9 @@ class OcClient:
         json = r.json()
         for elem in json:
             result[elem['identifier']] = elem['title']
-            self.episodes[elem['identifier']] = elem['title']
+            self.episodes[elem['identifier']] = {"title": elem['title'], "created": elem['created'],
+                                                 "is_part_of": elem['is_part_of']}
         return result
 
-    def get_episode(self, episode_id):
+    def get_episode_data(self, episode_id):
         return self.episodes[episode_id]

@@ -4,7 +4,7 @@
 
 {% block content %}<h1>Aufnahmen Details</h1>
 
-    <h1>{{ episode[1] }}</h1>
+    <h1>{{ (episode[1])['title'] }}</h1>
     <p>{{ episode[0] }}</p>
 
     <h2>Gehört zu <a href="/series/{{ series_id }}">{{ series_name }}</a></h2>

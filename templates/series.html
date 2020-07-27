@@ -46,8 +46,8 @@
     <div>
         <h1 id="header">List aller Serien</h1>
         <ul class="series_list" id="ser">
-            {% for id, name in data %}
-                <li><a href="/series/{{ id }}" class="ser_list1">{{ name }}</a></li>
+            {% for id, data in all_series %}
+                <li><a href="/series/{{ id }}" class="ser_list1">{{ data['title'] }}</a></li>
             {% endfor %}
         </ul>
     </div>

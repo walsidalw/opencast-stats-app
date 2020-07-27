@@ -42,20 +42,23 @@ def org():
 
 @app.route('/series')
 def series():
-    return render_template('series.html', data=SERIES.items())
+    return render_template('series.html', all_series=SERIES.items())
 
 
 @app.route('/series/<series_id>')
-def series_datails(series_id):
+def series_details(series_id):
     episodes = oc_client.get_all_episodes(series_id)
-    return render_template('series_details.html', series_id=series_id, series_name=SERIES[series_id],
+    series_name = (SERIES[series_id])['title']
+    return render_template('series_details.html', series_id=series_id, series_name=series_name,
                            episodes=episodes.items())
 
 
-@app.route('/episode/<series_id>/<episode_id>')
-def episode_datails(series_id, episode_id):
-    episode = (episode_id, oc_client.get_episode(episode_id))
-    return render_template('episode_details.html', series_id=series_id, series_name=SERIES[series_id],
+@app.route('/episodes/<episode_id>')
+def episode_details(episode_id):
+    episode = (episode_id, oc_client.get_episode_data(episode_id))
+    series_id = (episode[1])['is_part_of']
+    series_name = (SERIES[series_id])['title']
+    return render_template('episode_details.html', series_id=series_id, series_name=series_name,
                            episode=episode)
 
 
