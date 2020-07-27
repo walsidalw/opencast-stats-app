@@ -4,15 +4,14 @@
 {% block title %}Series Details{% endblock title %}
 
 {% block content %}<h1>Serien Details</h1>
-
     <h1>{{ series_name }}</h1>
-    <p>{{ series_id }}</p>
+    <p>{{ series_id }}</p><br/>
 
-    <div class="episodes_list" id="epi">
-        {% for id, name in episodes %}
-            <a href="/episode/{{ series_id }}/{{ id }}" class="epi_list1">{{ name }}</a>
-            <p>
-        {% endfor %}
+    <div id="wrap">
+        <ul id="epi_list">
+            {% for id, name in episodes %}
+                <li><a href="/episode/{{ series_id }}/{{ id }}">{{ name }}</a></li>
+            {% endfor %}
+        </ul>
     </div>
-
 {% endblock content %}

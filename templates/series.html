@@ -3,13 +3,52 @@
 
 {% block title %}Series{% endblock title %}
 
-{% block content %}<h1>Series</h1>
+{% block script %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
 
-    <div class="series_list" id="ser">
-        {% for id, name in data %}
-            <a href="/series/{{ id }}" class="ser_list1">{{ name }}</a>
-            <p>
-        {% endfor %}
+    (function ($) {
+      jQuery.expr[':'].Contains = function(a,i,m){
+          return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+      };
+
+
+      function listFilter(header, list) {
+          const form = $("<form>").attr({"class": "filterform", "action": "#"}),
+              input = $("<input>").attr({"class": "filterinput", "type": "text"});
+          $(form).append(input).appendTo(header);
+
+        $(input)
+          .change( function () {
+              const filter = $(this).val();
+              if(filter) {
+              $(list).find("a:not(:Contains(" + filter + "))").parent().hide();
+              $(list).find("a:Contains(" + filter + ")").parent().show();
+            } else {
+              $(list).find("li").show();
+            }
+            return false;
+          })
+        .keyup( function () {
+            $(this).change();
+        });
+      }
+
+      $(function () {
+        listFilter($("#header"), $("#ser"));
+      });
+    }(jQuery));
+
+  </script>
+{% endblock script%}
+
+{% block content %}
+    <div>
+        <h1 id="header">List aller Serien</h1>
+        <ul class="series_list" id="ser">
+            {% for id, name in data %}
+                <li><a href="/series/{{ id }}" class="ser_list1">{{ name }}</a></li>
+            {% endfor %}
+        </ul>
     </div>
-
 {% endblock content %}
