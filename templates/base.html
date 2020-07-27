@@ -2,21 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %} - Opencast Statistics {% endblock title %}</title>
+
+    <-- CSS imports -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" media="screen" />
+
+    <title>{% block title %} - Opencast Statistics {% endblock title %}</title>
 </head>
 <body>
+    <-- Active page recognition -->
     {% set navigation_bar = [
             ('/', 'index', 'Index'),
             ('/org', 'org', 'Organisation'),
             ('/series', 'series', 'Serien')
         ] -%}
-
     {% set active_page = active_page|default('index') -%}
 
-    <style type="text/css" title="text/css" media="screen">
-        @import url({{ url_for('static', filename='style.css') }});
-    </style>
+    <-- Navigation bar -->
     <div class="topnav" id="myTopnav">
         {% for href, id, caption in navigation_bar %}
         <a{% if id == active_page %} class="active"{% endif %}
@@ -27,8 +29,10 @@
         </a>
     </div>
 
+    <-- Content block filled out by child files -->
     {% block content %}{% endblock content %}
 
+    <-- Script for responsive navigation bar -->
     <script>
     function myFunction() {
       var x = document.getElementById("myTopnav");

@@ -1,0 +1,13 @@
+# Opencast configuration
+opencast:
+  uri:
+  user:
+  password:
+
+# InfluxDB configuration
+influxdb:
+  uri:
+  user:
+  password:
+  retention-policy:
+  measurement:

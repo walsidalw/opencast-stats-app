@@ -3,4 +3,13 @@
 
 {% block title %}Series{% endblock title %}
 
-{% block content %}<h1>Series</h1>{% endblock content %}
+{% block content %}<h1>Series</h1>
+
+    <div class="series_list" id="ser">
+        {% for id, name in data %}
+            <a href="/series/{{ id }}" class="ser_list1">{{ name }}</a>
+            <p>
+        {% endfor %}
+    </div>
+
+{% endblock content %}
