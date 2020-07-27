@@ -1,14 +1,14 @@
 from flask import Flask, render_template
+from apscheduler.schedulers.background import BackgroundScheduler
 import occlient
 import atexit
 import yaml
-from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
 """ Configuration file parsing """
-with open("config.yaml", "r") as ymlfile:
-    cfg = yaml.load(ymlfile)
+with open("test_config.yaml", "r") as ymlfile:
+    cfg = yaml.safe_load(ymlfile)
 
 """ Initializing clients """
 oc_client = occlient.OcClient(cfg["opencast"])
@@ -47,8 +47,16 @@ def series():
 
 @app.route('/series/<series_id>')
 def series_datails(series_id):
-    print(SERIES[series_id])
-    return render_template('series_details.html', series_id=series_id, series_name=SERIES[series_id])
+    episodes = oc_client.get_all_episodes(series_id)
+    return render_template('series_details.html', series_id=series_id, series_name=SERIES[series_id],
+                           episodes=episodes.items())
+
+
+@app.route('/episode/<series_id>/<episode_id>')
+def episode_datails(series_id, episode_id):
+    episode = (episode_id, oc_client.get_episode(episode_id))
+    return render_template('episode_details.html', series_id=series_id, series_name=SERIES[series_id],
+                           episode=episode)
 
 
 if __name__ == '__main__':

@@ -5,6 +5,14 @@
 
 {% block content %}<h1>Serien Details</h1>
 
-    <h1>{{ name }}</h1>
+    <h1>{{ series_name }}</h1>
+    <p>{{ series_id }}</p>
+
+    <div class="episodes_list" id="epi">
+        {% for id, name in episodes %}
+            <a href="/episode/{{ series_id }}/{{ id }}" class="epi_list1">{{ name }}</a>
+            <p>
+        {% endfor %}
+    </div>
 
 {% endblock content %}
