@@ -30,30 +30,45 @@ def index():
 @app.route('/org')
 def org():
     data = oc_client.get_stats("organization", "plays", "mh_default_org")
-    return render_template('org.html')
+    zip_test = zip(data['values'], data['labels'])
+    return render_template('org.html', total=data['total'], stats=zip_test)
 
 
 @app.route('/series')
 def series():
-    series_data = oc_client.get_series()
-    return render_template('series.html', all_series=series_data.items())
+    series_all = oc_client.get_all_series()
+    return render_template('series.html', all_series=series_all.items())
 
 
 @app.route('/series/<series_id>')
 def series_details(series_id):
-    series_data = oc_client.get_series()
+    series_name = oc_client.get_series_data(series_id)['title']
     episodes = oc_client.get_all_episodes(series_id)
-    series_name = (series_data[series_id])['title']
+
+    data1 = oc_client.get_stats("series", "plays", series_id)
+    print(data1)
+    data2 = oc_client.get_stats("series", "visits", series_id)
+    print(data2)
+    data3 = oc_client.get_stats("series", "finishes", series_id)
+    print(data3)
+
     return render_template('series_details.html', series_id=series_id, series_name=series_name,
                            episodes=episodes.items())
 
 
 @app.route('/episodes/<episode_id>')
 def episode_details(episode_id):
-    series_data = oc_client.get_series()
     episode = (episode_id, oc_client.get_episode_data(episode_id))
     series_id = (episode[1])['is_part_of']
-    series_name = (series_data[series_id])['title']
+    series_name = oc_client.get_series_data(series_id)['title']
+
+    data1 = oc_client.get_stats("episode", "plays", episode_id)
+    print(data1)
+    data2 = oc_client.get_stats("episode", "visits", episode_id)
+    print(data2)
+    data3 = oc_client.get_stats("episode", "finishes", episode_id)
+    print(data3)
+
     return render_template('episode_details.html', series_id=series_id, series_name=series_name,
                            episode=episode)
 
