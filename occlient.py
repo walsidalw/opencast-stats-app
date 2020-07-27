@@ -7,13 +7,13 @@ class OcClient:
         self.url = cfg['uri']
         self.user = cfg['user']
         self.password = cfg['password']
+        self.series = {}
         self.episodes = {}
 
-    def get_all_series(self):
+    def update_all_series(self):
         url = self.url + "/api/series"
         params = {"sort": "title:ASC", "offset": 0}
         offset = 0
-        result = {}
         while True:
             params["offset"] = offset
             r = requests.get(url=url, params=params, auth=(self.user, self.password))
@@ -22,8 +22,11 @@ class OcClient:
             offset += 100
             x = r.json()
             for elem in x:
-                result[elem['identifier']] = {"title": elem['title'], "created": elem['created']}
-        return result
+                self.series[elem['identifier']] = {"title": elem['title'], "created": elem['created']}
+        print("scheduler ran")
+
+    def get_series(self):
+        return self.series
 
     def get_all_episodes(self, series_id):
         url = self.url + "/api/events"
