@@ -7,7 +7,7 @@ import yaml
 app = Flask(__name__)
 
 """ Configuration file parsing """
-with open("test_config.yaml", "r") as ymlfile:
+with open("test_config2.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
 """ Initializing clients """
@@ -29,6 +29,7 @@ def index():
 
 @app.route('/org')
 def org():
+    data = oc_client.get_stats("organization", "plays", "mh_default_org")
     return render_template('org.html')
 
 
