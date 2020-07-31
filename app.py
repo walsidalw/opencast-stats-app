@@ -1,7 +1,6 @@
 from flask import Flask, render_template
-from apscheduler.schedulers.background import BackgroundScheduler
 import occlient
-import atexit
+import influxclient
 import yaml
 
 app = Flask(__name__)
@@ -10,10 +9,11 @@ app = Flask(__name__)
 with open("test_config.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
-orgaId = (cfg["opencast"])["organizationId"]
+orgaId = (cfg['opencast'])['organizationId']
 
 """ Initializing clients """
-oc_client = occlient.OcClient(cfg["opencast"])
+oc_client = occlient.OcClient(cfg['opencast'])
+influx_clients = influxclient.get_clients(cfg['influxdb'])
 
 
 @app.route('/')

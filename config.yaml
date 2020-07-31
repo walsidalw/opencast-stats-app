@@ -7,8 +7,9 @@ opencast:
 
 # InfluxDB configuration
 influxdb:
-  uri:
+  host:
+  port:
   user:
   password:
+  database:
   retention-policy:
-  measurement:
