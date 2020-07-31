@@ -7,19 +7,13 @@ import yaml
 app = Flask(__name__)
 
 """ Configuration file parsing """
-with open("test_config2.yaml", "r") as ymlfile:
+with open("test_config.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
+
+orgaId = (cfg["opencast"])["organizationId"]
 
 """ Initializing clients """
 oc_client = occlient.OcClient(cfg["opencast"])
-oc_client.update_all_series()
-
-
-""" Run an update task in the background every minute for series dict """
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=oc_client.update_all_series, trigger="interval", minutes=1)
-scheduler.start()
-atexit.register(lambda: scheduler.shutdown())
 
 
 @app.route('/')
@@ -29,48 +23,28 @@ def index():
 
 @app.route('/org')
 def org():
-    data = oc_client.get_stats("organization", "plays", "mh_default_org")
-    zip_test = zip(data['values'], data['labels'])
-    return render_template('org.html', total=data['total'], stats=zip_test)
+    return render_template('org.html')
 
 
 @app.route('/series')
 def series():
     series_all = oc_client.get_all_series()
-    return render_template('series.html', all_series=series_all.items())
+    return render_template('series.html', all_series=series_all)
 
 
 @app.route('/series/<series_id>')
 def series_details(series_id):
-    series_name = oc_client.get_series_data(series_id)['title']
+    series_name = oc_client.get_series_name(series_id)
     episodes = oc_client.get_all_episodes(series_id)
-
-    data1 = oc_client.get_stats("series", "plays", series_id)
-    print(data1)
-    data2 = oc_client.get_stats("series", "visits", series_id)
-    print(data2)
-    data3 = oc_client.get_stats("series", "finishes", series_id)
-    print(data3)
-
     return render_template('series_details.html', series_id=series_id, series_name=series_name,
-                           episodes=episodes.items())
+                           episodes=episodes)
 
 
 @app.route('/episodes/<episode_id>')
 def episode_details(episode_id):
-    episode = (episode_id, oc_client.get_episode_data(episode_id))
-    series_id = (episode[1])['is_part_of']
-    series_name = oc_client.get_series_data(series_id)['title']
-
-    data1 = oc_client.get_stats("episode", "plays", episode_id)
-    print(data1)
-    data2 = oc_client.get_stats("episode", "visits", episode_id)
-    print(data2)
-    data3 = oc_client.get_stats("episode", "finishes", episode_id)
-    print(data3)
-
-    return render_template('episode_details.html', series_id=series_id, series_name=series_name,
-                           episode=episode)
+    episode_data = oc_client.get_episode_data(episode_id)
+    return render_template('episode_details.html', episode_name=episode_data[0], series_id=episode_data[1],
+                           series_name=episode_data[2])
 
 
 if __name__ == '__main__':

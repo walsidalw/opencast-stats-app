@@ -3,6 +3,7 @@ opencast:
   uri:
   user:
   password:
+  organizationId:
 
 # InfluxDB configuration
 influxdb:
