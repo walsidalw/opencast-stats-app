@@ -7,5 +7,16 @@
     <h1>{{ episode_name }}</h1>
 
     <h2>Gehört zu <a href="/series/{{ series_id }}">{{ series_name }}</a></h2>
-
+    <p>
+    {% for table in tables %}
+            {{ titles[loop.index] }}
+            {{ table|safe }}
+    {% endfor %}
+    </p>
+    <p>
+    {% for table in seg %}
+            {{ times[loop.index] }}
+            {{ table|safe }}
+    {% endfor %}
+    </p>
 {% endblock content %}

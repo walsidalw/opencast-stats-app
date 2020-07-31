@@ -14,4 +14,10 @@
             {% endfor %}
         </ul>
     </div>
+
+    {% for table in tables %}
+            {{ titles[loop.index] }}
+            {{ table|safe }}
+    {% endfor %}
+
 {% endblock content %}

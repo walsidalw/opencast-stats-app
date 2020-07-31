@@ -7,4 +7,9 @@
 
     <h1>Orga</h1>
 
+    {% for table in tables %}
+            {{ titles[loop.index] }}
+            {{ table|safe }}
+    {% endfor %}
+
 {% endblock content %}
