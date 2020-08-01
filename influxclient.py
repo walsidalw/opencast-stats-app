@@ -34,6 +34,6 @@ def get_segments(client: InfluxDBClient, rp, measurement, event_id, orga_id):
         r_json = json.loads((points[0])['segments'])
         for elem in r_json:
             index.append(elem['label'])
-            data.append((elem['nb_plays'], elem['play_rate']))
-        return pd.DataFrame(data, columns=['plays', 'playrate'], index=index)
+            data.append(elem['play_rate'])
+        return pd.DataFrame(data, columns=['playrate'], index=index)
     return pd.DataFrame()

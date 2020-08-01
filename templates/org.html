@@ -4,12 +4,37 @@
 {% block title %}Orga{% endblock title %}
 
 {% block content %}
-
-    <h1>Orga</h1>
+    <div><h1>Orga</h1>
 
     {% for table in tables %}
             {{ titles[loop.index] }}
             {{ table|safe }}
     {% endfor %}
-
+    </div>
 {% endblock content %}
+
+{% block plots %}
+    <div>
+        <h3>Zugriffsdaten: Anzahl Plays, Finishes und Nutzer</h3>
+        <div id="plays"></div>
+    </div>
+{% endblock plots %}
+
+{% block foot %}
+    <!-- D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+
+        var graphs = {{graphJSON | safe}};
+        var id = "plays";
+
+        Plotly.plot(id, // the ID of the div, created above
+                    graphs.data,
+                    graphs.layout || {});
+    </script>
+{% endblock foot %}

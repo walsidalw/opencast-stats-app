@@ -20,3 +20,38 @@
     {% endfor %}
     </p>
 {% endblock content %}
+
+{% block plots %}
+    <div>
+        <h3>Zugriffsdaten: Anzahl Plays, Finishes und Nutzer</h3>
+        <div id="plays"></div>
+        <h3>Segmente: Anzahl Plays an bestimmten Stellen in der Aufnahme</h3>
+        <div id="seg"></div>
+    </div>
+{% endblock plots %}
+
+{% block foot %}
+    <!-- D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+
+        var plays = {{graphJSON[0] | safe}};
+        var segments = {{graphJSON[1] | safe}};
+        var id = "plays";
+        var seg = "seg"
+
+        Plotly.plot(id, // the ID of the div, created above
+                    plays.data,
+                    plays.layout || {});
+
+        Plotly.plot(seg, // the ID of the div, created above
+                    segments.data,
+                    segments.layout || {});
+
+    </script>
+{% endblock foot %}
