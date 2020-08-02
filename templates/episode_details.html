@@ -2,32 +2,17 @@
 
 {% block title %}Episode Details{% endblock title %}
 
-{% block content %}<h1>Aufnahmen Details</h1>
-
+{% block content %}
+    <h1>Aufnahmen Details</h1>
     <h1>{{ episode_name }}</h1>
-
     <h2>Gehört zu <a href="/series/{{ series_id }}">{{ series_name }}</a></h2>
-    <p>
-    {% for table in tables %}
-            {{ titles[loop.index] }}
-            {{ table|safe }}
-    {% endfor %}
-    </p>
-    <p>
-    {% for table in seg %}
-            {{ times[loop.index] }}
-            {{ table|safe }}
-    {% endfor %}
-    </p>
 {% endblock content %}
 
 {% block plots %}
-    <div>
-        <h3>Zugriffsdaten: Anzahl Plays, Finishes und Nutzer</h3>
-        <div id="plays"></div>
-        <h3>Segmente: Anzahl Plays an bestimmten Stellen in der Aufnahme</h3>
-        <div id="seg"></div>
-    </div>
+    <h3>Zugriffsdaten: Anzahl Plays, Finishes und Nutzer</h3>
+    <div id="plays"></div>
+    <h3>Segmente: Anzahl Plays an bestimmten Stellen in der Aufnahme</h3>
+    <div id="seg", class="segments"></div>
 {% endblock plots %}
 
 {% block foot %}
@@ -39,19 +24,17 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
 
     <script type="text/javascript">
-
-        var plays = {{graphJSON[0] | safe}};
-        var segments = {{graphJSON[1] | safe}};
-        var id = "plays";
-        var seg = "seg"
+        let graphPlays = {{graphs[0] | safe}};
+        let graphSegments = {{graphs[1] | safe}};
+        let id = "plays";
+        let seg = "seg"
 
         Plotly.plot(id, // the ID of the div, created above
-                    plays.data,
-                    plays.layout || {});
+                    graphPlays.data,
+                    graphPlays.layout || {});
 
         Plotly.plot(seg, // the ID of the div, created above
-                    segments.data,
-                    segments.layout || {});
-
+                    graphSegments.data,
+                    graphSegments.layout || {});
     </script>
 {% endblock foot %}

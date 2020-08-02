@@ -1,10 +1,22 @@
 body {
   margin: 0;
+  padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.center {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 1200px;
+}
+
+.segments {
+  max-height: 250px;
 }
 
 .topnav {
   overflow: hidden;
+  text-align:center;
   background-color: #24425c;
 }
 

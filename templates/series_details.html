@@ -14,17 +14,6 @@
             {% endfor %}
         </ul>
     </div>
-
-    {% for table in tables %}
-            {{ titles[loop.index] }}
-            {{ table|safe }}
-    {% endfor %}
-
-    <div>
-        <h3>Plot Plays</h3>
-        <div id="id"></div>
-    </div>
-
 {% endblock content %}
 
 {% block plots %}
@@ -44,11 +33,11 @@
 
     <script type="text/javascript">
 
-        var graphs = {{graphJSON | safe}};
-        var id = "plays";
+        let graph = {{graph | safe}};
+        let id = "plays";
 
         Plotly.plot(id, // the ID of the div, created above
-                    graphs.data,
-                    graphs.layout || {});
+                    graph.data,
+                    graph.layout || {});
     </script>
 {% endblock foot %}
