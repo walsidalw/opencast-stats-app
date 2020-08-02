@@ -1,6 +1,7 @@
 from influxdb import DataFrameClient, InfluxDBClient
 import pandas as pd
 import json
+import time
 
 
 def get_clients(cfg):
@@ -32,8 +33,13 @@ def get_segments(client: InfluxDBClient, rp, measurement, event_id, orga_id):
         index = []
         data = []
         r_json = json.loads((points[0])['segments'])
-        for elem in r_json:
-            index.append(elem['label'])
+        if "15" in (r_json[0])['label']:
+            seconds = 15
+        else:
+            seconds = 30
+        for i, elem in enumerate(r_json):
+            sec = (i + 1) * seconds
+            index.append((time.strftime("%H:%M:%S", time.gmtime(sec))))
             data.append(elem['play_rate'])
-        return pd.DataFrame(data, columns=['playrate'], index=index)
-    return pd.DataFrame()
+        return index, data
+    return []

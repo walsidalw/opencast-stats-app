@@ -52,7 +52,7 @@ def episode_details(episode_id):
     episode_data = oc_client.get_episode_data(episode_id)
     df = influxclient.get_views(influx_clients['df_client'], rp, 'impressions_daily', 'eventId', episode_id, orgaId)
     seg = influxclient.get_segments(influx_clients['point_client'], rp, 'segments_daily', episode_id, orgaId)
-    graphs = plots.get_plays_plot(df), plots.get_plays_plot(seg)
+    graphs = plots.get_plays_plot(df), plots.get_segments_plot(seg)
     return render_template('episode_details.html', episode_name=episode_data[0], series_id=episode_data[1],
                            series_name=episode_data[2], tables=[df.to_html(classes='data')], titles=df.columns.values,
                            seg=[seg.to_html(classes='data')], times=seg.columns.values, graphJSON=graphs)
