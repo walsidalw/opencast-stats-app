@@ -1,5 +1,6 @@
 import json
 import plotly
+import math
 import pandas as pd
 import plotly.graph_objs as go
 pd.options.plotting.backend = "plotly"
@@ -8,9 +9,23 @@ pd.options.plotting.backend = "plotly"
 def get_plays_plot(df):
     index = df.index.to_pydatetime()
 
-    trace1 = go.Scatter(x=index, y=list(df['plays']), mode='lines+markers', name='Plays')
-    trace2 = go.Scatter(x=index, y=list(df['visitors']), mode='lines+markers', name='Visitors')
-    trace3 = go.Scatter(x=index, y=list(df['finishes']), mode='lines+markers', name='Finishes')
+    trace1 = go.Scatter(
+        x=index,
+        y=list(df['plays']),
+        mode='lines+markers',
+        name='Plays')
+
+    trace2 = go.Scatter(
+        x=index,
+        y=list(df['visitors']),
+        mode='lines+markers',
+        name='Visitors')
+
+    trace3 = go.Scatter(
+        x=index,
+        y=list(df['finishes']),
+        mode='lines+markers',
+        name='Finishes')
 
     data = [trace1, trace2, trace3]
 
@@ -96,9 +111,20 @@ def get_segments_plot(tup):
 def get_bar_plot(tup):
     x, y = tup
 
-    trace1 = go.Bar(x=x, y=[x[0] for x in y], name='Plays')
-    trace2 = go.Bar(x=x, y=[x[1] for x in y], name='Visitors')
-    trace3 = go.Bar(x=x, y=[x[2] for x in y], name='Finishes')
+    trace1 = go.Bar(
+        x=x,
+        y=[x[0] for x in y],
+        name='Plays')
+
+    trace2 = go.Bar(
+        x=x,
+        y=[x[1] for x in y],
+        name='Visitors')
+
+    trace3 = go.Bar(
+        x=x,
+        y=[x[2] for x in y],
+        name='Finishes')
 
     data = [trace1, trace2, trace3]
 
@@ -109,10 +135,18 @@ def get_bar_plot(tup):
         plot_bgcolor='white',
         margin=dict(
             l=35,
-            r=250,
+            r=0,
             pad=0,
-            b=250,
-            t=40))
+            b=400,
+            t=40),
+        xaxis=dict(
+            nticks=len(x),
+            tickmode="auto",
+            tickangle=60,
+            ticklen=5,
+            tickwidth=1,
+            tickcolor="#444",
+            ticks="outside"))
 
     fig = dict(data=data, layout=layout)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -120,11 +154,17 @@ def get_bar_plot(tup):
 
 def get_heatmap_plot(comb, events):
     index = comb[0].to_pydatetime()
+    zmax = 0
+    for elem in comb[1]:
+        if zmax < max(elem):
+            zmax = max(elem)
 
     data = go.Heatmap(dict(
         x=index,
         y=[x[1] for x in events],
         z=comb[1],
+        zmin=0,
+        zmax=math.floor(zmax * 0.75),
         colorscale='portland',
         colorbar=dict(
             title=dict(
@@ -140,9 +180,17 @@ def get_heatmap_plot(comb, events):
                       "<extra></extra>"))
 
     layout = dict(
-        autosize=True,
+        autosize=False,
+        height=len(index) * 5,
+        width=1200,
         xaxis=dict(
             tickmode="auto",
+            ticklen=5,
+            tickwidth=1,
+            tickcolor="#444",
+            ticks="outside"),
+        yaxis=dict(
+            nticks=len(index),
             ticklen=5,
             tickwidth=1,
             tickcolor="#444",

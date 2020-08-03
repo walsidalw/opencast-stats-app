@@ -10,23 +10,24 @@ body {
   max-width: 1200px;
 }
 
+.center h1, h2, p {
+  font-family: "Calibri", sans-serif;
+  font-weight: lighter;
+  color: #2d2d2d;
+}
+
 .segments {
   max-height: 250px;
   height: 30%;
 }
 
 .lines {
-  max-height: 500px;
-  height: 50%;
-}
-
-.bars {
   max-height: 600px;
   height: 50%;
 }
 
-.heatmap {
-  max-height: 500px;
+.bars {
+  max-height: 900px;
   height: 50%;
 }
 

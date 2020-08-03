@@ -3,11 +3,40 @@
 
 {% block title %}Series Details{% endblock title %}
 
-{% block content %}<h1>Serien Details</h1>
-    <h1>{{ series_name }}</h1>
-    <p>{{ series_id }}</p><br/>
+{% block content %}
+    <h1 class="title">Detailansicht: Serie</h1>
+    <p>
+        Die folgenden Plots zeigen, wie häufig die Aufnahmen der Veranstaltungsreihe <b>'{{ series_name }}'</b>
+        abgespielt, bis zum Ende geschaut und von unterschiedlichen Nutzern besucht worden sind.
+        Zu den <a href="#episodes">Aufnahmen</a>.
+    </p>
 
-    <div id="wrap">
+    <div class="plots">
+        <h2>Zugriffsdaten für die Veranstaltungsreihe</h2>
+        <p>
+            Plot 1 zeigt, auf die gesamte Reihe aggregierte Zugriffsdaten:
+        </p>
+        <div id="plays" class="lines"></div>
+        <h2>Aufnahmen im Vergleich</h2>
+        <p>
+            Plot 2 zeigt pro Aufnahme wie häufige diese abgespielt wurde, wie häufig diese von unterschiedlichen
+            Nutzern abgespielt wurde und wie häufig die Aufnahmen bis zum Ende geschaut wurden:
+        </p>
+        <div id="bar" class="bars"></div>
+        <h2>Zugriffszahlen im zeitlichen Verlauf</h2>
+        <p>
+            Plot 3 zeigt die Anzahl unterschiedlicher Besucher zu jeder Aufnahme in der Reihe im zeitlichen Verlauf:
+        </p>
+        <div id="heat" class="heatmap"></div>
+    </div>
+
+    <div>
+        <a id="episodes"></a>
+        <h2>Aufnahmen</h2>
+        <p>
+            Hier befinden sind alle zu dieser Veranstaltungsreihe gehörenden Aufnahmen. Über den Link gelangen Sie
+            zu der Detailansicht der jeweiligen Aufnahme.
+        </p>
         <ul id="epi_list">
             {% for id, name in episodes %}
                 <li><a href="/episodes/{{ id }}">{{ name }}</a></li>
@@ -15,17 +44,6 @@
         </ul>
     </div>
 {% endblock content %}
-
-{% block plots %}
-    <div>
-        <h3>Zugriffsdaten: Anzahl Plays, Finishes und Nutzer</h3>
-        <div id="plays" class="lines"></div>
-        <h3>Aufnahmen im Vergleich</h3>
-        <div id="bar" class="bars"></div>
-        <h3>Zugriffszahlen im Zeitlichen Verlauf</h3>
-        <div id="heat" class="heatmap"></div>
-    </div>
-{% endblock plots %}
 
 {% block foot %}
     <!-- D3.js -->

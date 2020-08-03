@@ -45,7 +45,7 @@
 
 {% block content %}
     <div>
-        <h1 id="header">List aller Serien</h1>
+        <h1 id="header">Liste aller Serien</h1>
         <ul class="series_list" id="ser">
             {% for id, title in all_series %}
                 <li><a href="/series/{{ id }}" class="ser_list1">{{ title }}</a></li>

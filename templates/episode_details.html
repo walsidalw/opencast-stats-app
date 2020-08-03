@@ -3,17 +3,30 @@
 {% block title %}Episode Details{% endblock title %}
 
 {% block content %}
-    <h1>Aufnahmen Details</h1>
-    <h1>{{ episode_name }}</h1>
-    <h2>Gehört zu <a href="/series/{{ series_id }}">{{ series_name }}</a></h2>
-{% endblock content %}
+    <h1 class="title">Detailansicht: Aufnahme</h1>
+    <p>
+        Die folgenden Plots zeigen, wie häufig die Aufnahme <b>'{{ episode_name }}'</b>
+        abgespielt, bis zum Ende geschaut und von unterschiedlichen Nutzern besucht worden ist.
+    </p>
+    <p>
+        Diese Aufnahme gehört zu der Veranstaltungsreihe <a href="/series/{{ series_id }}">'{{ series_name }}'</a>.
+    </p>
 
-{% block plots %}
-    <h3>Zugriffsdaten: Anzahl Plays, Finishes und Nutzer</h3>
-    <div id="plays"></div>
-    <h3>Segmente: Anzahl Plays an bestimmten Stellen in der Aufnahme</h3>
-    <div id="seg", class="segments"></div>
-{% endblock plots %}
+    <div class="plots">
+        <h2>Zugriffsdaten für die Aufnahme</h2>
+        <p>
+
+            Plot 1 zeigt tägliche Zugriffsdaten für diese Aufnahme:
+        </p>
+        <div id="plays" class="lines"></div>
+        <h2>Videosegmente</h2>
+        <p>
+            Plot 2 zeigt für jedes Videosegment, wie häufig es im Verhältnis zu der Gesamtanzahl der Besucher
+            der Aufnahme abgespielt worden ist:
+        </p>
+        <div id="seg" class="segments"></div>
+    </div>
+{% endblock content %}
 
 {% block foot %}
     <!-- D3.js -->
