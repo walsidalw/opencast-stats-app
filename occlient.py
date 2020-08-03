@@ -41,7 +41,7 @@ class OcClient:
         r = requests.get(url=url, params=params, auth=(self.user, self.password))
         json_data = r.json()
         for elem in json_data:
-            result.append((elem['identifier'], elem['title']))
+            result.append([elem['identifier'], elem['title']])
         return result
 
     """ Returns stored data for a specified episode. If no data is stored yet, requests information from Opencast"""

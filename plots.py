@@ -54,3 +54,26 @@ def get_segments_plot(tup):
                     hovertemplate=htemp, colorbar=colbar))
     fig.update_layout(xaxis=xaxis, yaxis=yaxis, showlegend=False, autosize=True, margin=marg)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+
+def get_bar_plot(tup):
+    x, y = tup
+    trace1 = go.Bar(x=x, y=[x[0] for x in y], name='Plays')
+    trace2 = go.Bar(x=x, y=[x[1] for x in y], name='Visitors')
+    trace3 = go.Bar(x=x, y=[x[2] for x in y], name='Finishes')
+    data = [trace1, trace2, trace3]
+    layout = dict(
+        barmode='group',
+        bargap=0.15,
+        bargroupgap=0.1,
+        plot_bgcolor='white',
+        margin=dict(l=35, r=250, pad=0, b=250, t=40)
+    )
+    fig = dict(data=data, layout=layout)
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+
+def get_heatmap_plot(comb, events):
+    index = comb[0].to_pydatetime()
+    fig = go.Figure(go.Heatmap(x=index, y=[x[1] for x in events], z=comb[1], colorscale='portland'))
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

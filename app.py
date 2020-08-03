@@ -43,9 +43,12 @@ def series_details(series_id):
     episodes = oc_client.get_all_episodes(series_id)
     df = influxclient.get_views(influx_clients['df_client'], rp, 'impressions_daily', 'seriesId',
                                 series_id, orgaId)
-    graph = plots.get_plays_plot(df)
+    totals = influxclient.get_totals(influx_clients['point_client'], rp, 'impressions_daily', series_id,
+                                     orgaId, episodes)
+    combined = influxclient.get_views_combined(influx_clients['df_client'], rp, 'impressions_daily', orgaId, episodes)
+    graphs = plots.get_plays_plot(df), plots.get_bar_plot(totals), plots.get_heatmap_plot(combined, episodes)
     return render_template('series_details.html', series_id=series_id, series_name=series_name,
-                           episodes=episodes, graph=graph)
+                           episodes=episodes, graphPlays=graphs[0], graphBar=graphs[1], graphHeat=graphs[2])
 
 
 @app.route('/episodes/<episode_id>')

@@ -14,6 +14,14 @@ body {
   max-height: 250px;
 }
 
+.lines {
+  max-height: 600px;
+}
+
+.bars {
+  max-height: 800px;
+}
+
 .topnav {
   overflow: hidden;
   text-align:center;

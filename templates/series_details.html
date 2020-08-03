@@ -19,7 +19,11 @@
 {% block plots %}
     <div>
         <h3>Zugriffsdaten: Anzahl Plays, Finishes und Nutzer</h3>
-        <div id="plays"></div>
+        <div id="plays" class="lines"></div>
+        <h3>Aufnahmen im Vergleich</h3>
+        <div id="bar" class="bars"></div>
+        <h3>Zugriffszahlen im Zeitlichen Verlauf</h3>
+        <div id="heat" class="heatmap"></div>
     </div>
 {% endblock plots %}
 
@@ -33,11 +37,21 @@
 
     <script type="text/javascript">
 
-        let graph = {{graph | safe}};
-        let id = "plays";
+        let graphPlays = {{ graphPlays | safe}};
+        let graphBar = {{ graphBar | safe}};
+        let graphHeat = {{ graphHeat | safe }};
+        let plays = "plays";
+        let bar = "bar"
+        let heat = "heat"
 
-        Plotly.plot(id, // the ID of the div, created above
-                    graph.data,
-                    graph.layout || {});
+        Plotly.plot(plays, // the ID of the div, created above
+                    graphPlays.data,
+                    graphPlays.layout || {});
+        Plotly.plot(bar, // the ID of the div, created above
+                    graphBar.data,
+                    graphBar.layout || {});
+        Plotly.plot(heat, // the ID of the div, created above
+                    graphHeat.data,
+                    graphHeat.layout || {});
     </script>
 {% endblock foot %}

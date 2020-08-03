@@ -23,6 +23,37 @@ def get_views(client: DataFrameClient, rp, measurement, resource, res_id, orga_i
     return pd.DataFrame()
 
 
+def get_views_combined(client: DataFrameClient, rp, measurement, orga_id, events):
+    df = pd.DataFrame()
+    z = []
+    for idx, name in events:
+        temp = get_views(client, rp, measurement, 'eventId', idx, orga_id)
+        temp = temp.drop(columns=['plays', 'finishes'])
+        temp = temp.rename(columns={'visitors': idx})
+        df = df.join(temp, how='outer')
+        df = df.fillna(0)
+        z.append(list(df[idx]))
+    return df.index, z
+
+
+def get_totals(client: InfluxDBClient, rp, measurement, series_id, orga_id, events):
+    params = {'val1': orga_id,
+              'val2': series_id}
+    q = 'SELECT sum("finishes") AS "finishes", sum("plays") AS "plays", sum("visitors") AS "visitors" ' \
+        'FROM "{}"."{}" WHERE "organizationId"=$val1 AND "seriesId"=$val2 GROUP BY "eventId"'\
+        .format(rp, measurement)
+    r = client.query(q, bind_params=params)
+    index = []
+    data = []
+    for idx, name in events:
+        points = list(r.get_points(measurement=measurement, tags={"eventId": idx}))
+        if points:
+            for point in points:
+                index.append(name)
+                data.append((point['plays'], point['visitors'], point['finishes']))
+    return index, data
+
+
 def get_segments(client: InfluxDBClient, rp, measurement, event_id, orga_id):
     params = {'val1': orga_id,
               'val2': event_id}
