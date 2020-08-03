@@ -12,14 +12,22 @@ body {
 
 .segments {
   max-height: 250px;
+  height: 30%;
 }
 
 .lines {
-  max-height: 600px;
+  max-height: 500px;
+  height: 50%;
 }
 
 .bars {
-  max-height: 800px;
+  max-height: 600px;
+  height: 50%;
+}
+
+.heatmap {
+  max-height: 500px;
+  height: 50%;
 }
 
 .topnav {
