@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 pd.options.plotting.backend = "plotly"
 
 
-def get_plays_plot(df):
+def get_views_plot(df):
     index = df.index.to_pydatetime()
 
     trace1 = go.Scatter(
@@ -133,12 +133,6 @@ def get_bar_plot(tup):
         bargap=0.12,
         bargroupgap=0.05,
         plot_bgcolor='white',
-        margin=dict(
-            l=35,
-            r=0,
-            pad=0,
-            b=400,
-            t=40),
         xaxis=dict(
             nticks=len(x),
             tickmode="auto",
@@ -146,7 +140,14 @@ def get_bar_plot(tup):
             ticklen=5,
             tickwidth=1,
             tickcolor="#444",
-            ticks="outside"))
+            ticks="outside",
+            automargin=True),
+        margin=dict(
+            l=35,
+            r=0,
+            pad=0,
+            b=0,
+            t=40))
 
     fig = dict(data=data, layout=layout)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -154,6 +155,7 @@ def get_bar_plot(tup):
 
 def get_heatmap_plot(comb, events):
     index = comb[0].to_pydatetime()
+
     zmax = 0
     for elem in comb[1]:
         if zmax < max(elem):
@@ -181,7 +183,7 @@ def get_heatmap_plot(comb, events):
 
     layout = dict(
         autosize=False,
-        height=len(index) * 5,
+        height=len(events) * 20,
         width=1200,
         xaxis=dict(
             tickmode="auto",
@@ -194,13 +196,14 @@ def get_heatmap_plot(comb, events):
             ticklen=5,
             tickwidth=1,
             tickcolor="#444",
-            ticks="outside"),
+            ticks="outside",
+            automargin=True),
         margin=dict(
             l=0,
             r=0,
             pad=0,
-            b=20,
-            t=40))
+            b=0,
+            t=50))
 
     fig = go.Figure(dict(data=data, layout=layout))
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

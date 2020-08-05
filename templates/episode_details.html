@@ -3,29 +3,39 @@
 {% block title %}Episode Details{% endblock title %}
 
 {% block content %}
-    <h1 class="title">Detailansicht: Aufnahme</h1>
-    <p>
-        Die folgenden Plots zeigen, wie häufig die Aufnahme <b>'{{ episode_name }}'</b>
-        abgespielt, bis zum Ende geschaut und von unterschiedlichen Nutzern besucht worden ist.
-    </p>
-    <p>
-        Diese Aufnahme gehört zu der Veranstaltungsreihe <a href="/series/{{ series_id }}">'{{ series_name }}'</a>.
-    </p>
-
-    <div class="plots">
-        <h2>Zugriffsdaten für die Aufnahme</h2>
+    {% if ((graphViews == '') and (graphHeat == '')) %}
+        <h1 class="title">Keine Statistiken!</h1>
         <p>
-
-            Plot 1 zeigt tägliche Zugriffsdaten für diese Aufnahme:
+            Zu der Aufnahme <b>'{{ episode_name }}'</b> wurden keine Statistiken gefunden!
         </p>
-        <div id="plays" class="lines"></div>
-        <h2>Videosegmente</h2>
+    {% else %}
+        <h1 class="title">Detailansicht: Aufnahme</h1>
         <p>
-            Plot 2 zeigt für jedes Videosegment, wie häufig es im Verhältnis zu der Gesamtanzahl der Besucher
-            der Aufnahme abgespielt worden ist:
+            Die folgenden Plots zeigen, wie häufig die Aufnahme <b>'{{ episode_name }}'</b>
+            abgespielt, bis zum Ende geschaut und von unterschiedlichen Nutzern besucht worden ist.
         </p>
-        <div id="seg" class="segments"></div>
-    </div>
+        <p>
+            Diese Aufnahme gehört zu der Veranstaltungsreihe <a href="/series/{{ series_id }}">'{{ series_name }}'</a>.
+        </p>
+
+        <div class="plots">
+        {% if not (graphViews == '') %}
+            <h2>Zugriffsdaten für die Aufnahme</h2>
+            <p>
+                Plot 1 zeigt tägliche Zugriffsdaten für diese Aufnahme:
+            </p>
+            <div id="views" class="lines"></div>
+        {% endif %}
+        {% if not (graphHeat == '') %}
+            <h2>Videosegmente</h2>
+            <p>
+                Plot 2 zeigt für jedes Videosegment, wie häufig es im Verhältnis zu der Gesamtanzahl der Besucher
+                der Aufnahme abgespielt worden ist:
+            </p>
+            <div id="heat" class="segments"></div>
+        {% endif %}
+        </div>
+    {% endif %}
 {% endblock content %}
 
 {% block foot %}
@@ -37,17 +47,19 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
 
     <script type="text/javascript">
-        let graphPlays = {{graphs[0] | safe}};
-        let graphSegments = {{graphs[1] | safe}};
-        let id = "plays";
-        let seg = "seg"
-
-        Plotly.plot(id, // the ID of the div, created above
-                    graphPlays.data,
-                    graphPlays.layout || {});
-
-        Plotly.plot(seg, // the ID of the div, created above
-                    graphSegments.data,
-                    graphSegments.layout || {});
+        {% if not (graphViews == '') %}
+        let graphViews = {{ graphViews | safe}};
+        let views = "views";
+        Plotly.plot(views, // the ID of the div, created above
+            graphViews.data,
+            graphViews.layout || {});
+        {% endif %}
+        {% if not (graphHeat == '') %}
+        let graphHeat = {{ graphHeat | safe}};
+        let heat = "heat"
+        Plotly.plot(heat, // the ID of the div, created above
+            graphHeat.data,
+            graphHeat.layout || {});
+        {% endif %}
     </script>
 {% endblock foot %}

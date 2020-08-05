@@ -28,11 +28,12 @@ def get_views_combined(client: DataFrameClient, rp, measurement, orga_id, events
     z = []
     for idx, name in events:
         temp = get_views(client, rp, measurement, 'eventId', idx, orga_id)
-        temp = temp.drop(columns=['plays', 'finishes'])
-        temp = temp.rename(columns={'visitors': idx})
-        df = df.join(temp, how='outer')
-        df = df.fillna(0)
-        z.append(list(df[idx]))
+        if not temp.empty:
+            temp = temp.drop(columns=['plays', 'finishes'])
+            temp = temp.rename(columns={'visitors': idx})
+            df = df.join(temp, how='outer')
+            df = df.fillna(0)
+            z.append(list(df[idx]))
     return df.index, z
 
 

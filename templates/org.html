@@ -9,7 +9,7 @@
         Der folgende Plot zeigt, wie häufig Aufnahmen der Organisation WWU
         abgespielt, bis zum Ende geschaut und von unterschiedlichen Nutzern besucht worden sind:
     </p>
-    <div id="plays"></div>
+    <div id="views"></div>
 {% endblock content %}
 
 {% block foot %}
@@ -21,11 +21,11 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
 
     <script type="text/javascript">
-        let graph = {{graph | safe}};
-        let id = "plays";
+        let graphViews = {{ graphViews | safe}};
+        let views = "views";
 
-        Plotly.plot(id, // the ID of the div, created above
-                    graph.data,
-                    graph.layout || {});
+        Plotly.plot(views, // the ID of the div, created above
+                    graphViews.data,
+                    graphViews.layout || {});
     </script>
 {% endblock foot %}

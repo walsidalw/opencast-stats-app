@@ -4,45 +4,59 @@
 {% block title %}Series Details{% endblock title %}
 
 {% block content %}
-    <h1 class="title">Detailansicht: Serie</h1>
-    <p>
-        Die folgenden Plots zeigen, wie häufig die Aufnahmen der Veranstaltungsreihe <b>'{{ series_name }}'</b>
-        abgespielt, bis zum Ende geschaut und von unterschiedlichen Nutzern besucht worden sind.
-        Zu den <a href="#episodes">Aufnahmen</a>.
-    </p>
+    {% if ((graphBar == '') and (graphHeat == '') and (graphViews == '')) %}
+        <h1 class="title">Keine Statistiken!</h1>
+        <p>
+            Es scheint, als gäbe es noch keine Statistiken zu der Veranstaltungsreihe <b>'{{ series_name }}'</b> oder
+            den dazugehörigen Aufnahmen!
+        </p>
+    {% else %}
+        <h1 class="title">Detailansicht: Serie</h1>
+        <p>
+            Die folgenden Plots zeigen, wie häufig die Aufnahmen der Veranstaltungsreihe <b>'{{ series_name }}'</b>
+            abgespielt, bis zum Ende geschaut und von unterschiedlichen Nutzern besucht worden sind.
+            Zu den <a href="#episodes">Aufnahmen</a>.
+        </p>
 
-    <div class="plots">
-        <h2>Zugriffsdaten für die Veranstaltungsreihe</h2>
-        <p>
-            Plot 1 zeigt, auf die gesamte Reihe aggregierte Zugriffsdaten:
-        </p>
-        <div id="plays" class="lines"></div>
-        <h2>Aufnahmen im Vergleich</h2>
-        <p>
-            Plot 2 zeigt pro Aufnahme wie häufige diese abgespielt wurde, wie häufig diese von unterschiedlichen
-            Nutzern abgespielt wurde und wie häufig die Aufnahmen bis zum Ende geschaut wurden:
-        </p>
-        <div id="bar" class="bars"></div>
-        <h2>Zugriffszahlen im zeitlichen Verlauf</h2>
-        <p>
-            Plot 3 zeigt die Anzahl unterschiedlicher Besucher zu jeder Aufnahme in der Reihe im zeitlichen Verlauf:
-        </p>
-        <div id="heat" class="heatmap"></div>
-    </div>
+        <div class="plots">
+        {% if not (graphViews == '') %}
+            <h2>Zugriffsdaten für die Veranstaltungsreihe</h2>
+            <p>
+                Plot 1 zeigt, auf die gesamte Reihe aggregierte Zugriffsdaten:
+            </p>
+            <div id="views" class="lines"></div>
+        {% endif %}
+        {% if not (graphBar == '') %}
+            <h2>Aufnahmen im Vergleich</h2>
+            <p>
+                Plot 2 zeigt pro Aufnahme wie häufige diese abgespielt wurde, wie häufig diese von unterschiedlichen
+                Nutzern abgespielt wurde und wie häufig die Aufnahmen bis zum Ende geschaut wurden:
+            </p>
+            <div id="bar" class="bars"></div>
+        {% endif %}
+        {% if not (graphHeat == '') %}
+            <h2>Zugriffszahlen im zeitlichen Verlauf</h2>
+            <p>
+                Plot 3 zeigt die Anzahl unterschiedlicher Besucher zu jeder Aufnahme in der Reihe im zeitlichen Verlauf:
+            </p>
+            <div id="heat" class="heatmap"></div>
+        {% endif %}
+        </div>
 
-    <div>
-        <a id="episodes"></a>
-        <h2>Aufnahmen</h2>
-        <p>
-            Hier befinden sind alle zu dieser Veranstaltungsreihe gehörenden Aufnahmen. Über den Link gelangen Sie
-            zu der Detailansicht der jeweiligen Aufnahme.
-        </p>
-        <ul id="epi_list">
-            {% for id, name in episodes %}
-                <li><a href="/episodes/{{ id }}">{{ name }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
+        <div>
+            <a id="episodes"></a>
+            <h2>Aufnahmen</h2>
+            <p>
+                Hier befinden sind alle zu dieser Veranstaltungsreihe gehörenden Aufnahmen. Über den Link gelangen Sie
+                zu der Detailansicht der jeweiligen Aufnahme.
+            </p>
+            <ul id="epi_list">
+                {% for id, name in episodes %}
+                    <li><a href="/episodes/{{ id }}">{{ name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock content %}
 
 {% block foot %}
@@ -54,22 +68,26 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
 
     <script type="text/javascript">
-
-        let graphPlays = {{ graphPlays | safe}};
+        {% if not (graphViews == '') %}
+        let graphViews = {{ graphViews | safe}};
+        let views = "views";
+        Plotly.plot(views, // the ID of the div, created above
+            graphViews.data,
+            graphViews.layout || {});
+        {% endif %}
+        {% if not (graphBar == '') %}
         let graphBar = {{ graphBar | safe}};
-        let graphHeat = {{ graphHeat | safe }};
-        let plays = "plays";
         let bar = "bar"
-        let heat = "heat"
-
-        Plotly.plot(plays, // the ID of the div, created above
-                    graphPlays.data,
-                    graphPlays.layout || {});
         Plotly.plot(bar, // the ID of the div, created above
-                    graphBar.data,
-                    graphBar.layout || {});
+            graphBar.data,
+            graphBar.layout || {});
+        {% endif %}
+        {% if not (graphHeat == '') %}
+        let graphHeat = {{ graphHeat | safe}};
+        let heat = "heat"
         Plotly.plot(heat, // the ID of the div, created above
-                    graphHeat.data,
-                    graphHeat.layout || {});
+            graphHeat.data,
+            graphHeat.layout || {});
+        {% endif %}
     </script>
 {% endblock foot %}
