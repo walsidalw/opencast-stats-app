@@ -3,6 +3,7 @@
 {% block title %}Episode Details{% endblock title %}
 
 {% block content %}
+    <!-- If no plots are available, show Error page -->
     {% if ((graphViews == '') and (graphHeat == '')) %}
         <h1 class="title">Keine Statistiken!</h1>
         <p>
@@ -18,6 +19,7 @@
             Diese Aufnahme gehört zu der Veranstaltungsreihe <a href="/series/{{ series_id }}">'{{ series_name }}'</a>.
         </p>
 
+        <!-- Deactivate a page segment, if the plot is missing -->
         <div class="plots">
         {% if not (graphViews == '') %}
             <h2>Zugriffsdaten für die Aufnahme</h2>
