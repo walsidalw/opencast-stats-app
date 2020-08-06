@@ -5,6 +5,12 @@ import time
 
 
 def get_clients(cfg):
+    """
+    Build the two InfluxDB clients that are used for queries.
+
+    :param cfg: Configuration for InfluxDB
+    :return: Dict containing both clients
+    """
     point_client = InfluxDBClient(cfg['host'], cfg['port'], cfg['user'], cfg['password'], cfg['database'])
     df_client = DataFrameClient(cfg['host'], cfg['port'], cfg['user'], cfg['password'], cfg['database'])
     return {'point_client': point_client,
@@ -12,6 +18,18 @@ def get_clients(cfg):
 
 
 def get_views(client: DataFrameClient, rp, measurement, resource, res_id, orga_id):
+    """
+    For a given resource type and Id, request number of plays, visitors and finishes grouped
+    by day.
+
+    :param client: InfluxDB DataFrame client for the query request
+    :param rp: Retention Policy
+    :param measurement: Name of the measurement under which the data is stored
+    :param resource: Type of resource. Can be "organizationId", "seriesId" or "eventId"
+    :param res_id: Unique identifier of resource
+    :param orga_id: OrganizationId of the requested resource
+    :return: DataFrame containing indexes for dates and columns for plays, visitors and finishes
+    """
     params = {'val1': orga_id,
               'val2': res_id}
     q = 'SELECT sum("finishes") AS "finishes", sum("plays") AS "plays", sum("visitors") AS "visitors" ' \
@@ -24,6 +42,18 @@ def get_views(client: DataFrameClient, rp, measurement, resource, res_id, orga_i
 
 
 def get_views_combined(client: DataFrameClient, rp, measurement, orga_id, events):
+    """
+    For given list of episodes, request daily number of visitors. Join the resulting DataFrames
+    and fill NaNs with 0s.
+
+    :param client: InfluxDB DataFrame client for the query request
+    :param rp: Retention Policy
+    :param measurement: Name of the measurement under which the data is stored
+    :param orga_id: OrganizationId of the requested episodes
+    :param events: List of episodes, containing episodeIds and titles
+    :return: Combined DataFrame for all episodes in list, where indexes are dates and columns represent
+             visitors of each episode on given date
+    """
     df = pd.DataFrame()
     z = []
     for idx, name in events:
@@ -38,6 +68,19 @@ def get_views_combined(client: DataFrameClient, rp, measurement, orga_id, events
 
 
 def get_totals(client: InfluxDBClient, rp, measurement, series_id, orga_id, events):
+    """
+    For given seriesId, request all points from InfluxDB summed up and grouped by eventId.
+    Filter the result set by eventIds and build indexes and data tuples for each episode in given list.
+
+    :param client: Simple InfluxDB client for the query request
+    :param rp: Retention Policy
+    :param measurement: Name of the measurement under which the data is stored
+    :param series_id: Unique identifier for series
+    :param orga_id: OrganizationId of the requested series
+    :param events: List of episodes, containing episodeIds and titles
+    :return: Tuple of episode titles as indexes and data list containing aggregated numbers of plays, visitors
+             and finishes of corresponding episode
+    """
     params = {'val1': orga_id,
               'val2': series_id}
     q = 'SELECT sum("finishes") AS "finishes", sum("plays") AS "plays", sum("visitors") AS "visitors" ' \
@@ -56,6 +99,17 @@ def get_totals(client: InfluxDBClient, rp, measurement, series_id, orga_id, even
 
 
 def get_segments(client: InfluxDBClient, rp, measurement, event_id, orga_id):
+    """
+    For given episode, request segment data from InfluxDB. Parse the returned JSON into human
+    readable form and build lists of indexes (time strings) and play rates for each segment.
+    
+    :param client: Simple InfluxDB client for the query request
+    :param rp: Retention Policy
+    :param measurement: Name of the measurement under which the data is stored
+    :param event_id: Unique identifier for episode
+    :param orga_id: OrganizationId of the requested episode
+    :return: Pair of indexes (time segments) and play rates
+    """""
     params = {'val1': orga_id,
               'val2': event_id}
     q = 'SELECT "segments" FROM "{}"."{}" WHERE "organizationId"=$val1 AND "eventId"=$val2'.format(rp, measurement)

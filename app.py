@@ -52,6 +52,13 @@ def episode_details(episode_id):
 
 
 def series_details_data(series_id):
+    """
+    Try to fetch statistics. If unsuccessful, do not invoke plotting functions and avoid exceptions.
+
+    :param series_id: Unique identifier for series
+    :return: List of all relevant data for rendering: series title, list of episodes and graphs
+             for the lines, bar and heatmap plots
+    """
     series_name = oc_client.get_series_name(series_id)
     episodes = oc_client.get_all_episodes(series_id)
 
@@ -80,6 +87,13 @@ def series_details_data(series_id):
 
 
 def episode_details_data(episode_id):
+    """
+    Try to fetch statistics. If unsuccessful, do not invoke plotting functions and avoid exceptions.
+
+    :param episode_id: Unique identifier for episode
+    :return: List of all relevant data for rendering: episode title, seriesId and title, and graphs
+             for the lines and segments heatmap plots
+    """
     episode_data = oc_client.get_episode_data(episode_id)
 
     view_stats = influxclient.get_views(influx_clients['df_client'], rp, 'impressions_daily',

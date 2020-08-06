@@ -8,8 +8,12 @@ class OcClient:
         self.user = cfg['user']
         self.password = cfg['password']
 
-    """ Requests and returns all series in organization. Returned data contains seriesId, title and creation date """
     def get_all_series(self):
+        """
+        Request and return all series in given Opencast organization.
+
+        :return: List of seriesId and title pairs
+        """
         url = self.url + "/api/series"
         params = {"sort": "title:ASC", "offset": 0, "limit": 10000}
         offset = 0
@@ -25,15 +29,25 @@ class OcClient:
                 result.append((elem['identifier'], elem['title']))
         return result
 
-    """ Requests series data from Opencast and returns series title """
     def get_series_name(self, series_id):
+        """
+        Request series information from Opencast.
+
+        :param series_id: Unique identifier for series
+        :return: Title of the series
+        """
         url = self.url + "/api/series/" + series_id
         r = requests.get(url=url, auth=(self.user, self.password))
         x = r.json()
         return x['title']
 
-    """ Returns all episodes within a specified series. Stores each episode inside class. """
     def get_all_episodes(self, series_id):
+        """
+        Request all episodes within a series.
+
+        :param series_id: Unique identifier for series
+        :return: List of pair of eventIds and titles for episodes
+        """
         url = self.url + "/api/events"
         params = {"filter": "is_part_of:" + series_id,
                   "sort": "start_date:ASC"}
@@ -44,8 +58,13 @@ class OcClient:
             result.append([elem['identifier'], elem['title']])
         return result
 
-    """ Returns stored data for a specified episode. If no data is stored yet, requests information from Opencast"""
     def get_episode_data(self, episode_id):
+        """
+        Requests episode information from Opencast.
+
+        :param episode_id: Unique identifier for episode
+        :return: Tuple of episode title, parent seriesId and parent series title
+        """
         url = self.url + "/api/events/" + episode_id
         r = requests.get(url=url, auth=(self.user, self.password))
         x = r.json()

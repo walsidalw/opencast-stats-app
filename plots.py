@@ -7,6 +7,12 @@ pd.options.plotting.backend = "plotly"
 
 
 def get_views_plot(df):
+    """
+    Build a plot for plays, visitors and finishes.
+
+    :param df: DataFrame, where the indexes dates and which contains columns for visitors, plays and finishes
+    :return: JSON-encoded lines plot
+    """
     index = df.index.to_pydatetime()
 
     trace1 = go.Scatter(
@@ -61,6 +67,12 @@ def get_views_plot(df):
 
 
 def get_segments_plot(tup):
+    """
+    Build a heatmap plot for video segments.
+
+    :param tup: Tuple of x for time values on the x axis and y for play rates corresponding to segments
+    :return: JSON-encoded heatmap plot
+    """
     x, y = tup
 
     data = go.Heatmap(dict(
@@ -109,6 +121,12 @@ def get_segments_plot(tup):
 
 
 def get_bar_plot(tup):
+    """
+    Build a bar plot containing combined data of all episodes within a series.
+
+    :param tup: Tuple of values for x and y axis
+    :return: JSON-encoded bar plot
+    """
     x, y = tup
 
     trace1 = go.Bar(
@@ -154,6 +172,13 @@ def get_bar_plot(tup):
 
 
 def get_heatmap_plot(comb, events):
+    """
+    Build a heatmap plot for comparison of visitor amounts between episodes relative to time.
+
+    :param comb: Contains date values for x axis and visitor values for each episode for y axis
+    :param events: Episode information, in particular titles
+    :return: JSON-encoded heatmap plot
+    """
     index = comb[0].to_pydatetime()
 
     zmax = 0
