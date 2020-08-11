@@ -19,44 +19,30 @@ def get_views_plot(df):
         x=index,
         y=list(df['plays']),
         mode='lines+markers',
-        name='Plays')
+        name='Wiedergegeben')
 
     trace2 = go.Scatter(
         x=index,
         y=list(df['visitors']),
         mode='lines+markers',
-        name='Visitors')
+        name='Besucher')
 
     trace3 = go.Scatter(
         x=index,
         y=list(df['finishes']),
         mode='lines+markers',
-        name='Finishes')
+        name='Beendet')
 
     data = [trace1, trace2, trace3]
 
     layout = dict(
         xaxis=dict(
-            showline=True,
-            showticklabels=True,
-            linecolor='rgb(204, 204, 204)',
-            linewidth=2,
-            ticks='outside',
-            tickfont=dict(
-                family='Arial',
-                size=12,
-                color='rgb(82, 82, 82)'),
-            showgrid=True,
-            gridcolor="#e6e6e6"),
+            ticks='outside'),
         yaxis=dict(
-            showgrid=True,
-            gridcolor="#e6e6e6",
-            zeroline=True,
-            zerolinecolor="#e6e6e6",
-            zerolinewidth=1),
-        plot_bgcolor='white',
+            rangemode='nonnegative',
+            automargin=True),
         margin=dict(
-            l=30,
+            l=0,
             r=0,
             pad=0,
             b=40,
@@ -99,21 +85,19 @@ def get_segments_plot(tup):
         autosize=True,
         xaxis=dict(
             title=dict(
-                text="Segmente"),
+                text='Segmente'),
             nticks=7,
-            tickmode="auto",
             tickangle=45,
-            ticklen=5,
-            tickwidth=1,
-            tickcolor="#444",
-            ticks="outside"),
+            ticks='outside',
+            automargin=True),
         yaxis=dict(
-            showticklabels=False),
+            showticklabels=False,
+            tickformat=',.0%'),
         margin=dict(
-            l=20,
-            r=20,
+            l=0,
+            r=0,
             pad=0,
-            b=20,
+            b=0,
             t=50))
 
     fig = go.Figure(dict(data=data, layout=layout))
@@ -132,36 +116,33 @@ def get_bar_plot(tup):
     trace1 = go.Bar(
         x=x,
         y=[x[0] for x in y],
-        name='Plays')
+        name='Wiedergegeben')
 
     trace2 = go.Bar(
         x=x,
         y=[x[1] for x in y],
-        name='Visitors')
+        name='Besucher')
 
     trace3 = go.Bar(
         x=x,
         y=[x[2] for x in y],
-        name='Finishes')
+        name='Beendet')
 
     data = [trace1, trace2, trace3]
 
     layout = dict(
         barmode='group',
-        bargap=0.12,
+        bargap=0.08,
         bargroupgap=0.05,
-        plot_bgcolor='white',
         xaxis=dict(
             nticks=len(x),
-            tickmode="auto",
             tickangle=60,
-            ticklen=5,
-            tickwidth=1,
-            tickcolor="#444",
             ticks="outside",
             automargin=True),
+        yaxis=dict(
+            automargin=True),
         margin=dict(
-            l=35,
+            l=0,
             r=0,
             pad=0,
             b=0,
@@ -198,9 +179,9 @@ def get_heatmap_plot(comb, events):
                 text="Anzahl Besucher",
                 side="top"),
             x=1,
-            y=0.515,
+            y=0.512,
             ypad=0,
-            len=1.03),
+            len=1),
         hovertemplate="<b>Datum:</b> %{x}<br>"
                       "<b>Aufnahme:</b> %{y}<br>"
                       "<b>Anzahl:</b> %{z}"
@@ -208,19 +189,12 @@ def get_heatmap_plot(comb, events):
 
     layout = dict(
         autosize=False,
-        height=len(events) * 20,
+        height=len(events) * 27,
         width=1200,
         xaxis=dict(
-            tickmode="auto",
-            ticklen=5,
-            tickwidth=1,
-            tickcolor="#444",
             ticks="outside"),
         yaxis=dict(
-            nticks=len(index),
-            ticklen=5,
-            tickwidth=1,
-            tickcolor="#444",
+            nticks=len(events),
             ticks="outside",
             automargin=True),
         margin=dict(
