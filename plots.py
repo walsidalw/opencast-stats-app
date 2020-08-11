@@ -72,12 +72,13 @@ def get_segments_plot(tup):
             title=dict(
                 text="Abspielrate",
                 side="top"),
+            tickformat=".0%",
             x=1,
             y=0.515,
             ypad=0,
             len=1.03),
         hovertemplate="<b>Zeitpunkt:</b> %{x}<br>"
-                      "<b>Abspielrate:</b> %{z}"
+                      "<b>Abspielrate:</b> %{z:,.0%}"
                       "<extra></extra>"))
 
     layout = dict(
