@@ -55,16 +55,18 @@ def get_views_combined(client: DataFrameClient, rp, measurement, orga_id, events
              visitors of each episode on given date
     """
     df = pd.DataFrame()
-    z = []
+    col = []
     for idx, name in events:
         temp = get_views(client, rp, measurement, 'eventId', idx, orga_id)
         if not temp.empty:
             temp = temp.drop(columns=['plays', 'finishes'])
             temp = temp.rename(columns={'visitors': idx})
             df = df.join(temp, how='outer')
-            df = df.fillna(0)
-            z.append(list(df[idx]))
-    return df.index, z
+
+    df = df.fillna(0)
+    for column in df.columns:
+        col.append(list(df[column]))
+    return df.index, col
 
 
 def get_totals(client: InfluxDBClient, rp, measurement, series_id, orga_id, events):
