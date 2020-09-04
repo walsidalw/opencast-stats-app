@@ -13,10 +13,6 @@ with open("test_config.yaml", "r") as ymlfile:
 orgaId = (cfg['opencast'])['organizationId']
 rp = (cfg['influxdb'])['retention-policy']
 
-""" Initializing clients """
-oc_client = occlient.OcClient(cfg['opencast'])
-influx_clients = influxclient.get_clients(cfg['influxdb'])
-
 
 @app.route('/')
 def index():
@@ -25,7 +21,8 @@ def index():
 
 @app.route('/org')
 def org():
-    view_stats = influxclient.get_views(influx_clients['df_client'], rp, 'impressions_daily',
+    influx_client = influxclient.get_dataframe_client(cfg['influxdb'])
+    view_stats = influxclient.get_views(influx_client, rp, 'impressions_daily',
                                         'organizationId', orgaId, orgaId)
     graph = plots.get_views_plot(view_stats)
     return render_template('org.html', graphViews=graph)
@@ -33,7 +30,7 @@ def org():
 
 @app.route('/series')
 def series():
-    series_all = oc_client.get_all_series()
+    series_all = occlient.get_all_series(cfg['opencast'])
     return render_template('series.html', all_series=series_all)
 
 
@@ -59,29 +56,31 @@ def series_details_data(series_id):
     :return: List of all relevant data for rendering: series title, list of episodes and graphs
              for the lines, bar and heatmap plots
     """
-    series_name = oc_client.get_series_name(series_id)
-    episodes = oc_client.get_all_episodes(series_id)
+    influx_client_df = influxclient.get_dataframe_client(cfg['influxdb'])
+    influx_client_ds = influxclient.get_dataset_client(cfg['influxdb'])
+    series_name = occlient.get_series_name(cfg['opencast'], series_id)
+    episodes = occlient.get_all_episodes(cfg['opencast'], series_id)
 
-    view_stats = influxclient.get_views(influx_clients['df_client'], rp, 'impressions_daily', 'seriesId',
+    view_stats = influxclient.get_views(influx_client_df, rp, 'impressions_daily', 'seriesId',
                                         series_id, orgaId)
     if view_stats.empty:
         graph_views = ''
     else:
         graph_views = plots.get_views_plot(view_stats)
 
-    totals = influxclient.get_totals(influx_clients['point_client'], rp, 'impressions_daily', series_id,
+    totals = influxclient.get_totals(influx_client_ds, rp, 'impressions_daily', series_id,
                                      orgaId, episodes)
     if not totals[0]:
         graph_totals = ''
     else:
         graph_totals = plots.get_bar_plot(totals)
 
-    combined = influxclient.get_views_combined(influx_clients['df_client'], rp, 'impressions_daily',
+    combined = influxclient.get_views_combined(influx_client_df, rp, 'impressions_daily',
                                                orgaId, episodes)
     if combined[0].empty:
         graph_combined = ''
     else:
-        graph_combined = plots.get_heatmap_plot(combined, episodes)
+        graph_combined = plots.get_heatmap_plot(combined)
 
     return [series_name, episodes, graph_views, graph_totals, graph_combined]
 
@@ -94,16 +93,18 @@ def episode_details_data(episode_id):
     :return: List of all relevant data for rendering: episode title, seriesId and title, and graphs
              for the lines and segments heatmap plots
     """
-    episode_data = oc_client.get_episode_data(episode_id)
+    influx_client_df = influxclient.get_dataframe_client(cfg['influxdb'])
+    influx_client_ds = influxclient.get_dataset_client(cfg['influxdb'])
+    episode_data = occlient.get_episode_data(cfg['opencast'], episode_id)
 
-    view_stats = influxclient.get_views(influx_clients['df_client'], rp, 'impressions_daily',
+    view_stats = influxclient.get_views(influx_client_df, rp, 'impressions_daily',
                                         'eventId', episode_id, orgaId)
     if view_stats.empty:
         graph_views = ""
     else:
         graph_views = plots.get_views_plot(view_stats)
 
-    segments_stats = influxclient.get_segments(influx_clients['point_client'], rp, 'segments_daily',
+    segments_stats = influxclient.get_segments(influx_client_ds, rp, 'segments_daily',
                                                episode_id, orgaId)
     if not segments_stats:
         graph_heat = ""

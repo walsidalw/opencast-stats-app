@@ -153,7 +153,7 @@ def get_bar_plot(tup):
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
-def get_heatmap_plot(comb, events):
+def get_heatmap_plot(comb):
     """
     Build a heatmap plot for comparison of visitor amounts between episodes relative to time.
 
@@ -164,14 +164,14 @@ def get_heatmap_plot(comb, events):
     index = comb[0].to_pydatetime()
 
     zmax = 0
-    for elem in comb[1]:
+    for elem in comb[2]:
         if zmax < max(elem):
             zmax = max(elem)
 
     data = go.Heatmap(dict(
         x=index,
-        y=[x[1] for x in events],
-        z=comb[1],
+        y=comb[1],
+        z=comb[2],
         zmin=0,
         zmax=math.floor(zmax * 0.75),
         colorscale='portland',
@@ -190,12 +190,12 @@ def get_heatmap_plot(comb, events):
 
     layout = dict(
         autosize=False,
-        height=len(events) * 27,
+        height=len(comb[1]) * 27,
         width=1200,
         xaxis=dict(
             ticks="outside"),
         yaxis=dict(
-            nticks=len(events),
+            nticks=len(comb[1]),
             ticks="outside",
             automargin=True),
         margin=dict(

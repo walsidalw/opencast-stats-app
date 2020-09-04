@@ -1,20 +1,16 @@
 from influxdb import DataFrameClient, InfluxDBClient
 import pandas as pd
+import numpy as np
 import json
 import time
 
 
-def get_clients(cfg):
-    """
-    Build the two InfluxDB clients that are used for queries.
+def get_dataset_client(cfg):
+    return InfluxDBClient(cfg['host'], cfg['port'], cfg['user'], cfg['password'], cfg['database'])
 
-    :param cfg: Configuration for InfluxDB
-    :return: Dict containing both clients
-    """
-    point_client = InfluxDBClient(cfg['host'], cfg['port'], cfg['user'], cfg['password'], cfg['database'])
-    df_client = DataFrameClient(cfg['host'], cfg['port'], cfg['user'], cfg['password'], cfg['database'])
-    return {'point_client': point_client,
-            'df_client': df_client}
+
+def get_dataframe_client(cfg):
+    return DataFrameClient(cfg['host'], cfg['port'], cfg['user'], cfg['password'], cfg['database'])
 
 
 def get_views(client: DataFrameClient, rp, measurement, resource, res_id, orga_id):
@@ -55,6 +51,7 @@ def get_views_combined(client: DataFrameClient, rp, measurement, orga_id, events
              visitors of each episode on given date
     """
     df = pd.DataFrame()
+    val = []
     col = []
     for idx, name in events:
         temp = get_views(client, rp, measurement, 'eventId', idx, orga_id)
@@ -62,11 +59,12 @@ def get_views_combined(client: DataFrameClient, rp, measurement, orga_id, events
             temp = temp.drop(columns=['plays', 'finishes'])
             temp = temp.rename(columns={'visitors': idx})
             df = df.join(temp, how='outer')
+            col.append(name)
 
     df = df.fillna(0)
     for column in df.columns:
-        col.append(list(df[column]))
-    return df.index, col
+        val.append(list(df[column]))
+    return df.index, col, val
 
 
 def get_totals(client: InfluxDBClient, rp, measurement, series_id, orga_id, events):
