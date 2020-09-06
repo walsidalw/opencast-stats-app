@@ -3,4 +3,21 @@
 
 {% block title %}Index{% endblock title %}
 
-{% block content %}<h1>Index</h1>{% endblock content %}
+{% block content %}
+    <h1>Hauptseite</h1>
+    <p>
+        Diese Seite dient zur Darstellung von Statistiken zu Aufnahmen in Opencast.
+        Statistiken werden auf drei Ebenen dargestellt: Organisation, Serie und Aufnahme.
+
+        Auf der Organisations- Serien- und Aufnahmeebene werden tägliche Anzahlen von Besuchern, Wiedergaben
+        Beendigungen von Aufnahmen dargstellt. Auf der Serienebene können darüber hinaus die absoluten Metriken
+        aller zugehörigen Aufnahmen im Vergleich eingesehen werden. Die Ansichten einer Aufnahme enthalten außerdem
+        die Abspielraten von einzelnen Video-Segmenten.
+
+        Über den Reiter <a href="/series">Serien</a> in der Navigationsleiste gelangt man zu einer Übersicht aller
+        Serien der Organisation. Wählt man aus dieser Übersicht eine Serie aus, wird die Detailansicht zu der entsprechenden
+        Serie angezeigt. Diese Detailansicht enthält auch eine Liste alles zugehörigen Aufnahmen, von der aus man zu
+        der Detailansicht der jeweiligen Aufnahme gelangen kann.
+    </p>
+
+{% endblock content %}
