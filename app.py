@@ -22,7 +22,7 @@ import yaml
 app = Flask(__name__)
 
 """ Configuration file parsing """
-with open("test_config.yaml", "r") as ymlfile:
+with open("config.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
 orgaId = (cfg['opencast'])['organizationId']
