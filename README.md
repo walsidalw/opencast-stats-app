@@ -1,6 +1,6 @@
 # opencast-stats-app #
 
-Flask Web-App presenting episode statistics for episodes in [Opencast](https://opencast.org) with raw data stored in [InfluxDB](https://www.influxdata.com). It is intended for use in conjunction with the [opencast-matomo-adapter](), which collects and aggregates statistics from [Matomo](https://matomo.org/). Not safe for production yet!
+Flask Web-App presenting episode statistics for episodes in [Opencast](https://opencast.org) with raw data stored in [InfluxDB](https://www.influxdata.com). It is intended for use in conjunction with the [opencast-matomo-adapter](https://github.com/walsidalw/opencast-matomo-adapter), which collects and aggregates statistics from [Matomo](https://matomo.org/). Not safe for production yet!
 
 ## How it works ##
 
